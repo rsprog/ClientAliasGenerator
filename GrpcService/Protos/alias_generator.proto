@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService.Protos";
+
+import "google/protobuf/timestamp.proto";
+
+service AliasGenerator {
+	rpc ListFilmCandidates (AliasRequest) returns (CandidateCollection) {}
+	rpc GenerateRandomAlias (AliasRequest) returns (Tenant) {}
+	rpc GetAliasStream (AliasRequest) returns (stream Tenant) {}
+}
+
+message AliasRequest {
+	string tenantName = 1;
+	Mode mode = 2;
+}
+
+message Tenant {
+	string name = 1;
+	string alias = 2;
+}
+
+message CandidateCollection {
+	google.protobuf.Timestamp timestamp = 1;
+	int32 count = 2;
+	repeated Film films = 3;
+}
+
+message Film {
+	string title = 1;
+	string year = 2;
+}
+
+enum Mode {
+	UNKNOWN = 0;
+	SINGLE_WORD = 1;
+	ANY_WORD_COUNT = 2;
+	MATCH_WORD_COUNT = 3;
+}
